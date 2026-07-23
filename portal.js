@@ -2,13 +2,13 @@ const express = require ('express');
 const app = express();
 const PORT= 3005;
 
-// i Tell express to understand JSON (middleware)
+// Tell express to understand JSON (middleware)
 app.use(express.json());
 
-//i create an in memory database to temporarly save student information
+//create an in memory database to temporarly save student information
 let students = [];
 
-// i make a route to POST or Add  new student
+// make a route to POST or Add  new student
 app.post('/students', (req, res) => {
 	const { Fullname, Department, Gender } = req.body;
 
@@ -28,13 +28,25 @@ app.post('/students', (req, res) => {
 
 
 
-//i make a route to GET or Read all student information
+// make a route to GET or Read all student information
 app.get('/students', (req, res) => {
 	res.json(students);
 });
 
 
-//i make a route to Update Studunts information
+//make a route to GET student by Id
+app.get('/students/:id', (req, res) => {
+	const student = students.find(n => n.id === parseInt(req.params.id));
+
+	 if (!student) {
+	     return res.status(404).json({error: 'student not found'});
+     }
+
+	 res.json(student);
+});
+
+
+// make a route to Update Studunts information
 app.put('/students/:id', (req, res) => {
 	const student = students.find(n => n.id === parseInt(req.params.id));
 	
@@ -52,7 +64,7 @@ app.put('/students/:id', (req, res) => {
 	
 });
 
-//i make a route to Delete student details
+//make a route to Delete student details
 app.delete('/students/:id', (req, res) => {
 
     const initialLength = students.length;
